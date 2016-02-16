@@ -34,9 +34,9 @@
         "health",
         "configurable"
     ],
-    "companyName": "Freakified",
+    "companyName": "JMarhold",
     "enableMultiJS": false,
-    "longName": "TimeStyle",
+    "longName": "Myx`x``TimeStyle",
     "projectType": "native",
     "resources": {
         "media": [
@@ -295,8 +295,8 @@
         "basalt",
         "chalk"
     ],
-    "uuid": "4368ffa4-f0fb-4823-90be-f754b076bdaa",
-    "versionLabel": "5.0",
+    "uuid": "42596419-8231-4614-a718-6ed5fa76a800",
+    "versionLabel": "5.0.1",
     "watchapp": {
         "watchface": true
     }
