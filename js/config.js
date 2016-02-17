@@ -559,7 +559,7 @@ function sendSettingsToWatch() {
   window.localStorage.setItem('savedSettings', JSON.stringify(config));
 
   // Send the config data to the tracking service for SCIENCE
-  trackSettings(config);
+  //trackSettings(config);
 
   // Set the return URL depending on the runtime environment
   var return_to = getQueryParam('return_to', 'pebblejs://close#');
