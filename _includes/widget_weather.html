@@ -1,0 +1,22 @@
+<div id="{{widgetId}}">
+  <label>{% if widgetLabel != '' %}{{ widgetLabel }}{% else %}Weather{% endif %}</label>
+  <a href="https://www.yahoo.com/?ilc=401" target="_blank"> <img src="https://poweredby.yahoo.com/purple_retina.png" width="134" height="29"/> </a>
+  <br>
+  <label class="subtle">Location</label>
+  <div id="weather_setting" class="form-group" >
+    <div class="btn-group btn-group-justified"  data-toggle="buttons">
+      <label class="btn btn-default" data-setting="auto" >
+        <input type="radio" name="options" autocomplete="off"> Automatic (GPS)
+      </label>
+      <label class="btn btn-default" data-setting="manual" >
+        <input type="radio" name="options" autocomplete="off" id="weather_setting_manual"> Manual
+      </label>
+    </div>
+    <div class="form_group collapse" id="manual_weather_loc_setting_area">
+      <input type="text" class="form-control" style="margin-top: 15px" id="weather_loc" placeholder='e.g. "San Francisco CA US", or "94101 US"'>
+    </div>
+  </div>
+  <hr>
+</div>
+{% assign widgetId = '' %}
+{% assign widgetLabel = '' %}
