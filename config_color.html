@@ -3,6 +3,8 @@ layout: default
 title: "TimeStyle Settings"
 ---
 
+{% assign health = 'yes' %}
+
 <body style="padding: 70px 0;">
 {% include config_navbar.html %}
 
@@ -11,6 +13,7 @@ title: "TimeStyle Settings"
 
 <form>
   {% include config_theme_color.html %}
+  {% include config_time_display.html %}
   {% include config_sidebar_layout_rect.html %}
   {% include config_common_options.html %}
 </form>
@@ -44,7 +47,7 @@ $(".colorpicker").spectrum({
     ]
 });
 </script>
-{% include analyticstracking.html %}
+
 <script src="js/config.js"></script>
 </body>
 </html>

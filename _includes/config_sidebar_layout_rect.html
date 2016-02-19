@@ -1,33 +1,4 @@
 <hr>
-<label>Complications</label>
-<div id="sidebar_layout_section" class="rect">
-  <div class="col">
-    <div id="sidebar_layout_preview">
-      <div id="widget_0_preview" class="widget_preview">
-        <img src="images/sidebar_widgets/0-NONE.png" >
-      </div>
-      <div id="widget_1_preview" class="widget_preview">
-        <img src="images/sidebar_widgets/0-NONE.png" >
-      </div>
-      <div id="widget_2_preview" class="widget_preview">
-        <img src="images/sidebar_widgets/0-NONE.png" >
-      </div>
-    </div>
-  </div>
-  <img class="col" id="sidebar_preview_lines" src="images/lines.svg" height="155" />
-  <div class="col">
-    <select class="form-control" id="widget_0_selector">
-      {% include widget_selector.html %}
-    </select>
-    <select class="form-control" id="widget_1_selector">
-      {% include widget_selector.html %}
-    </select>
-    <select class="form-control" id="widget_2_selector">
-      {% include widget_selector.html %}  
-    </select>
-  </div>
-</div>
-<hr>
 <label>Sidebar Display</label><br>
 <label class="subtle">Position</label>
 <div id="sidebar_position_setting" class="form-group">
@@ -58,3 +29,58 @@
       </label>
   </div>
 </div>
+<hr>
+<label>Sidebar widgets</label>
+<div class="checkbox">
+  <label><input id="secondary_widgets" type="checkbox" value="">Enable secondary widgets</label>
+</div>
+<div id="sidebar_layout_section" class="rect">
+  <div class="col">
+    <div id="sidebar_layout_preview">
+      <div id="widget_0_preview" class="widget_preview">
+        <img src="images/sidebar_widgets/0-NONE.png" >
+      </div>
+      <div id="widget_1_preview" class="widget_preview">
+        <img src="images/sidebar_widgets/0-NONE.png" >
+      </div>
+      <div id="widget_2_preview" class="widget_preview">
+        <img src="images/sidebar_widgets/0-NONE.png" >
+      </div>
+    </div>
+  </div>
+    <div class="col">
+    <div id="sidebar_layout_preview_sec">
+      <div id="widget_3_preview" class="widget_preview">
+        <img src="images/sidebar_widgets/0-NONE.png" >
+      </div>
+      <div id="widget_4_preview" class="widget_preview">
+        <img src="images/sidebar_widgets/0-NONE.png" >
+      </div>
+      <div id="widget_5_preview" class="widget_preview">
+        <img src="images/sidebar_widgets/0-NONE.png" >
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <select class="form-control" id="widget_0_selector">
+      {% include widget_selector.html %}
+    </select>
+    <select class="form-control" id="widget_3_selector">
+      {% include widget_selector.html %}
+    </select>
+    <select class="form-control" id="widget_1_selector">
+      {% include widget_selector.html %}
+    </select>
+    <select class="form-control" id="widget_4_selector">
+      {% include widget_selector.html %}
+    </select>
+    <select class="form-control" id="widget_2_selector">
+      {% include widget_selector.html %}  
+    </select>
+    <select class="form-control" id="widget_5_selector">
+      {% include widget_selector.html %}  
+    </select>
+  </div>
+</div>
+

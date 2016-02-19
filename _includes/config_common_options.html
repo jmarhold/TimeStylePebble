@@ -1,165 +1,39 @@
+{% assign widgetId = '' %}
+{% assign widgetLabel = '' %}
 
 <hr>
-<div id="widget_battery_settings">
-  <label>Battery Meter</label>
-  <div id="battery_meter_setting" class="form-group" >
-    <label class="subtle">Style</label>
-    <div class="btn-group btn-group-justified"  data-toggle="buttons">
-      <label class="btn btn-default" data-setting="icon-only" >
-        <input type="radio" name="options" autocomplete="off">
-        <img src="images/battery_meter.png" width="30" height="30" ><br />
-        Icon
-      </label>
-      <label class="btn btn-default" data-setting="icon-and-percent" >
-        <input type="radio" name="options" autocomplete="off">
-        <img src="images/battery_meter_with_percent.png" width="30" height="30" ><br />
-        Icon &amp; percent
-      </label>
-    </div>
-  </div>
-  <div id="only_show_battery_when_low_setting" class="form-group">
-    <label class="subtle">Visibility</label>
-    <div class="btn-group btn-group-justified"  data-toggle="buttons">
-      <label class="btn btn-default" data-setting="yes">
-        <input type="radio" name="options" id="option1" autocomplete="off">
-        Only when low
-      </label>
-      <label class="btn btn-default" data-setting="no">
-        <input type="radio" name="options" id="option2" autocomplete="off">
-        Always
-      </label>
-    </div>
-  </div>
+
+<div id="widget_settings">
+  <label>Widget settings</label>
+  {% assign widgetId = 'widget_health_settings' %}
+  {% include widget_health.html %}
+
+  {% assign widgetId = 'widget_battery_settings' %}
+  {% include widget_battery.html %}
+
+  {% assign widgetId = 'widget_weather_settings' %}
+  {% include widget_weather.html %}
+
+  {% assign widgetId = 'widget_altclock_settings' %}
+  {% include widget_altclock.html %}
+</div>
+
+<div id="widget_settings_sec">
+  <label>Secondary Widget settings</label>
+  {% assign widgetId = 'widget_health_settings_sec' %}
+  {% include widget_health.html %}
+
+  {% assign widgetId = 'widget_battery_settings_sec' %}
+  {% include widget_battery.html %}
+
+  {% assign widgetId = 'widget_weather_settings_sec' %}
+  {% include widget_weather.html %}
+
+  {% assign widgetId = 'widget_altclock_settings_sec' %}
+  {% include widget_altclock.html %}
   <hr>
 </div>
-<div id="widget_weather_settings">
-  <label>Weather</label>
-  <a href="https://www.yahoo.com/?ilc=401" target="_blank"> <img src="https://poweredby.yahoo.com/purple_retina.png" width="134" height="29"/> </a>
-  <br>
-  <label class="subtle">Location</label>
-  <div id="weather_setting" class="form-group" >
-    <div class="btn-group btn-group-justified"  data-toggle="buttons">
-      <label class="btn btn-default" data-setting="auto" >
-        <input type="radio" name="options" autocomplete="off"> Automatic (GPS)
-      </label>
-      <label class="btn btn-default" data-setting="manual" >
-        <input type="radio" name="options" autocomplete="off" id="weather_setting_manual"> Manual
-      </label>
-    </div>
-    <div class="form_group collapse" id="manual_weather_loc_setting_area">
-      <input type="text" class="form-control" style="margin-top: 15px" id="weather_loc" placeholder='e.g. "San Francisco CA US", or "94101 US"'>
-    </div>
-  </div>
-  <label class="subtle">Temperature Unit</label>
-  <div id="units_setting" class="form-group" >
-    <div class="btn-group btn-group-justified"  data-toggle="buttons">
-      <label class="btn btn-default" data-setting="f" >
-        <input type="radio" name="options" autocomplete="off"> Fahrenheit
-      </label>
-      <label class="btn btn-default" data-setting="c" >
-        <input type="radio" name="options" autocomplete="off"> Celsius
-      </label>
-    </div>
-  </div>
-  <hr>
-</div>
-<div id="widget_altclock_settings">
-  <label>Alternate Time Zone</label>
-  <br>
-  <label class="subtle">Display Name (Max 4 letters)</label>
-  <input type="text" value="ALT" class="form-control" id="altclock_name" maxlength="4" placeholder='e.g. "PDT, CET, or UTC"'>
-  <br>
-  <label class="subtle">
-    Hour Offset<br>
-    <small>Relative to your local time</small>
-  </label><br>
-  <select id="altclock_offset_hour" class="form-control">
-    <option data-setting="-23">-23</option>
-    <option data-setting="-22">-22</option>
-    <option data-setting="-21">-21</option>
-    <option data-setting="-20">-20</option>
-    <option data-setting="-19">-19</option>
-    <option data-setting="-18">-18</option>
-    <option data-setting="-17">-17</option>
-    <option data-setting="-16">-16</option>
-    <option data-setting="-15">-15</option>
-    <option data-setting="-14">-14</option>
-    <option data-setting="-13">-13</option>
-    <option data-setting="-12">-12</option>
-    <option data-setting="-11">-11</option>
-    <option data-setting="-10">-10</option>
-    <option data-setting="-9">-9</option>
-    <option data-setting="-8">-8</option>
-    <option data-setting="-7">-7</option>
-    <option data-setting="-6">-6</option>
-    <option data-setting="-5">-5</option>
-    <option data-setting="-4">-4</option>
-    <option data-setting="-3">-3</option>
-    <option data-setting="-2">-2</option>
-    <option data-setting="-1">-1</option>
-    <option data-setting="0" selected>0</option>
-    <option data-setting="+1">+1</option>
-    <option data-setting="+2">+2</option>
-    <option data-setting="+3">+3</option>
-    <option data-setting="+4">+4</option>
-    <option data-setting="+5">+5</option>
-    <option data-setting="+6">+6</option>
-    <option data-setting="+7">+7</option>
-    <option data-setting="+8">+8</option>
-    <option data-setting="+9">+9</option>
-    <option data-setting="+10">+10</option>
-    <option data-setting="+11">+11</option>
-    <option data-setting="+12">+12</option>
-    <option data-setting="+13">+13</option>
-    <option data-setting="+14">+14</option>
-    <option data-setting="+15">+15</option>
-    <option data-setting="+16">+16</option>
-    <option data-setting="+17">+17</option>
-    <option data-setting="+18">+18</option>
-    <option data-setting="+19">+19</option>
-    <option data-setting="+20">+20</option>
-    <option data-setting="+21">+21</option>
-    <option data-setting="+22">+22</option>
-    <option data-setting="+23">+23</option>
-  </select>
-  <hr>
-</div>
-<label>Time Display</label><br>
-<div class="alert alert-info" role="alert">
-  To change between 12 hour and 24 hour mode, use the setting on your watch,
-  under Settings &rarr; Date &amp; Time.
-</div>
-<label class="subtle">Leading Zero</label>
-<div id="time_leading_zero_setting" class="form-group" >
-  <div class="btn-group btn-group-justified"  data-toggle="buttons">
-    <label class="btn btn-default" data-setting="no" >
-      <input type="radio" name="options" autocomplete="off">
-      <div class="example_face">6<br>32</div>
-      No leading zero
-    </label>
-    <label class="btn btn-default" data-setting="yes" >
-      <input type="radio" name="options" autocomplete="off">
-      <div class="example_face">06<br>32</div>
-      With leading zero
-    </label>
-  </div>
-</div>
-<label class="subtle">Font</label>
-<div id="clock_font_setting" class="form-group" >
-  <div class="btn-group btn-group-justified"  data-toggle="buttons">
-    <label class="btn btn-default" data-setting="default" >
-      <input type="radio" name="options" autocomplete="off">
-      <img class="example_img" src="images/font-preview-default.png" width="56" height="66">
-      Default (Avenir)
-      </label>
-    <label class="btn btn-default" data-setting="leco" >
-      <input type="radio" name="options" autocomplete="off">
-      <img class="example_img" src="images/font-preview-leco.png" width="56" height="66">
-      LECO
-    </label>
-  </div>
-</div>
-<hr>
+
 <label>Vibration</label><br>
 <label class="subtle">If the connection to the phone is lost</label>
 <div id="bluetooth_vibe_setting" class="form-group" >
@@ -168,7 +42,7 @@
       <input type="radio" name="options" autocomplete="off">No vibration
     </label>
     <label class="btn btn-default" data-setting="yes" >
-      <input type="radio" name="options" autocomplete="off">Vibrate on bluetooth disconnect
+      <input type="radio" name="options" autocomplete="off">Vibrate
     </label>
   </div>
 </div>
@@ -187,9 +61,33 @@
   </div>
 </div>
 <hr>
-<label>Language</label>
+<label>Battery Meter - low or charging</label>
+<div class="alert alert-info" role="alert" id="autobattery_info">
+  The battery meter will always be shown when the battery is low or charging.
+</div>
+<div id="battery_meter_setting" class="form-group" >
+  <label class="subtle">Style</label>
+  <div class="btn-group btn-group-justified"  data-toggle="buttons">
+    <label class="btn btn-default" data-setting="icon-only" >
+      <input type="radio" name="options" autocomplete="off">
+      <img src="images/battery_meter.png" width="30" height="30" ><br />
+      Icon only
+    </label>
+    <label class="btn btn-default" data-setting="icon-and-percent" >
+      <input type="radio" name="options" autocomplete="off">
+      <img src="images/battery_meter_with_percent.png" width="30" height="30" ><br />
+      Icon &amp; percent
+    </label>
+  </div>
+</div>
+
+
+<hr>
+<label>Regional Options</label><br />
+<label class="subtle">Language</label><br />
+<div class="form-group" >
 <select id="language_selection" class="form-control">
-  <option data-setting="0">Default (English)</option>
+  <option data-setting="0" selected>English (Default)</option>
   <option data-setting="15">Català</option>
   <option data-setting="7">Čeština</option>
   <option data-setting="21">Dansk</option>
@@ -201,6 +99,7 @@
   <option data-setting="26">Gaeilge</option>
   <option data-setting="25">Hrvatski</option>
   <option data-setting="4">Italiano</option>
+  <option data-setting="27">Latviešu</option>
   <option data-setting="22">Lietuviškai</option>
   <option data-setting="24">Magyar</option>
   <option data-setting="5">Nederlands</option>
@@ -211,9 +110,36 @@
   <option data-setting="12">Slovenčina</option>
   <option data-setting="23">Slovenščina</option>
   <option data-setting="20">Suomi</option>
+  <option data-setting="28">Srpski</option>
   <option data-setting="10">Svenska</option>
   <option data-setting="13">Tiếng Việt</option>
   <option data-setting="6">Türkçe</option>
   <option data-setting="9">Ελληνικά (requires language pack)</option>
   <option data-setting="17">Русский (requires language pack)</option>
 </select>
+</div>
+<label class="subtle">Units</label>
+<div id="units_setting" class="form-group" >
+  <div class="btn-group btn-group-justified"  data-toggle="buttons">
+    <label class="btn btn-default" data-setting="f" >
+      <input type="radio" name="options" autocomplete="off"> US
+    </label>
+    <label class="btn btn-default" data-setting="c" >
+      <input type="radio" name="options" autocomplete="off"> Metric
+    </label>
+  </div>
+</div>
+{% if health %}
+<label class="subtle">Decimal Separator</label>
+<div id="decimal_separator" class="form-group" >
+  <div class="btn-group btn-group-justified"  data-toggle="buttons">
+    <label class="btn btn-default" data-setting="." style="font-size: 24px">
+      <input type="radio" name="options" autocomplete="off">.
+    </label>
+    <label class="btn btn-default" data-setting="," style="font-size: 24px">
+      <input type="radio" name="options" autocomplete="off">,
+    </label>
+  </div>
+</div>
+{% endif %}
+

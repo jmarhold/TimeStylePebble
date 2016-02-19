@@ -1,4 +1,9 @@
-var CURRENT_SETTINGS_VERSION = 5;
+var CURRENT_SETTINGS_VERSION = 6;
+
+// number of widget sets
+var widgetPagesCount = 2;
+// postfixes in ids to recognize  which selects, divs etc. belongs to which widget page
+var widgetPostfixes = ['','_sec'];
 
 // if we have any persistent data saved, load it in
 $(document).ready(function() {
@@ -15,6 +20,8 @@ function loadSettingCheckbox(elementID, setting) {
   if(setting) {
     $('#' + elementID + ' label[data-setting="' + setting + '"] input').attr('checked', true);
     $('#' + elementID + ' label[data-setting="' + setting + '"]').addClass('active');
+    $('.' + elementID + ' label[data-setting="' + setting + '"] input').attr('checked', true);
+    $('.' + elementID + ' label[data-setting="' + setting + '"]').addClass('active');
   }
 }
 
@@ -30,18 +37,11 @@ function checkVersion() {
 // populates the sidebar widgets for someone with pre-widget saved settings
 function migrateLegacySettings(config) {
 
-  if(config.disable_weather != "yes") {
-    // if the weather is enabled, it goes on top
-    config.widget_0_id = '7';
-    config.widget_1_id = (config.battery_meter_setting != 'no') ? '2' : '0';
-  } else {
-    // if the weather is disabled, the battery meter goes on top
-    config.widget_0_id = (config.battery_meter_setting != 'no') ? '2' : '0';
-    config.widget_1_id = '0';
-  }
-
-  // the third widget is always the date
-  config.widget_2_id = '4';
+  // stick in the new defaults
+  config.health_use_distance = 'no';
+  config.health_use_restful_sleep = 'no';
+  config.decimal_separator = '.';
+  config.secondary_widgets = 'no';
 
   return config;
 }
@@ -49,7 +49,6 @@ function migrateLegacySettings(config) {
 function loadPreviousSettings() {
   // load the previous settings
   var savedSettings = JSON.parse(window.localStorage.getItem('savedSettings'));
-
 
   // if savedsettings exists but doesn't contain a version flag, it must be upgraded
   if(savedSettings && !savedSettings.settings_version) {
@@ -75,9 +74,13 @@ function loadPreviousSettings() {
       hourly_vibe_setting: 'no',
 
       // sidebar settings
+      secondary_widgets: 'no',
       widget_0_id: '7', // current weather
       widget_1_id: '0', // empty
       widget_2_id: '4', // today's date
+      widget_3_id: '0', // empty
+      widget_4_id: '0', // empty
+      widget_5_id: '0', // empty
       sidebar_position: 'right',
       use_large_sidebar_font_setting: 'no',
 
@@ -87,12 +90,16 @@ function loadPreviousSettings() {
       weather_setting: 'auto',
 
       // battery widget settings
-      only_show_battery_when_low_setting: 'no',
       battery_meter_setting: 'icon-only',
 
       // alt timezone widget settings
       altclock_name: 'ALT',
       altclock_offset: 0,
+
+      // health widget settings
+      health_use_distance: 'no',
+      health_use_restful_sleep: 'no',
+      decimal_separator: '.',
 
       // version key used for migrations
       settings_version: CURRENT_SETTINGS_VERSION
@@ -121,11 +128,13 @@ function loadPreviousSettings() {
   loadSettingCheckbox('bluetooth_vibe_setting', savedSettings.bluetooth_vibe_setting);
   loadSettingCheckbox('hourly_vibe_setting', savedSettings.hourly_vibe_setting);
   loadSettingCheckbox('battery_meter_setting', savedSettings.battery_meter_setting);
-  loadSettingCheckbox('only_show_battery_when_low_setting', savedSettings.only_show_battery_when_low_setting);
   loadSettingCheckbox('time_leading_zero_setting', savedSettings.leading_zero_setting);
   loadSettingCheckbox('clock_font_setting', savedSettings.clock_font_setting);
   loadSettingCheckbox('use_large_sidebar_font_setting', savedSettings.use_large_sidebar_font_setting);
   loadSettingCheckbox('weather_setting', savedSettings.weather_setting);
+  loadSettingCheckbox('decimal_separator', savedSettings.decimal_separator);
+  loadSettingCheckbox('health_use_distance', savedSettings.health_use_distance);
+  loadSettingCheckbox('health_use_restful_sleep', savedSettings.health_use_restful_sleep);
 
   // load weather location
   $('#weather_loc').val(savedSettings.weather_loc);
@@ -143,6 +152,17 @@ function loadPreviousSettings() {
   $('#widget_0_selector').val(savedSettings.widget_0_id);
   $('#widget_1_selector').val(savedSettings.widget_1_id);
   $('#widget_2_selector').val(savedSettings.widget_2_id);
+  $('#widget_3_selector').val(savedSettings.widget_3_id);
+  $('#widget_4_selector').val(savedSettings.widget_4_id);
+  $('#widget_5_selector').val(savedSettings.widget_5_id);
+
+  if (savedSettings.secondary_widgets == 'yes') { 
+    $('#secondary_widgets').prop('checked', true);
+    
+  }
+  customSecondaryWidgetsChanged();
+  $('#secondary_widgets').on('change', customSecondaryWidgetsChanged);
+
 
   // load alt timezone widget settings
   $('#altclock_name').val(savedSettings.altclock_name);
@@ -151,6 +171,23 @@ function loadPreviousSettings() {
 
   // update the widget settings sections to only show ones that are relevant
   showOnlySelectedWidgetSettings();
+}
+
+function customSecondaryWidgetsChanged() {
+  var checked =  $('#secondary_widgets').prop('checked');
+  if (checked) {
+    $('#sidebar_layout_preview_sec').show();
+    $('#widget_3_selector').show();
+    $('#widget_4_selector').show();
+    $('#widget_5_selector').show();
+  } else {
+    $('#sidebar_layout_preview_sec').hide();
+    $('#widget_3_selector').hide();
+    $('#widget_4_selector').hide();
+    $('#widget_5_selector').hide();
+  }
+
+  setFormHasChanges();
 }
 
 function loadLastUsedColors() {
@@ -185,7 +222,7 @@ $('#weather_loc').on('input', setFormHasChanges);
 $('#altclock_name').on('input', setFormHasChanges);
 
 $('#use_large_sidebar_font_setting').on('change', updateSidebarPreview);
-$('#battery_meter_setting').on('change', updateSidebarPreview);
+$('.battery_meter_setting').on('change', updateSidebarPreview);
 
 function customColorChanged() {
   setFormHasChanges();
@@ -222,14 +259,21 @@ function sidebarWidgetSelectionChanged() {
   // find out what the other selections were
   var otherSelections;
   var changedID = $(this).attr('id');
+  var primIDs = ['widget_0_selector', 'widget_1_selector', 'widget_2_selector'];
 
-  var otherSelections = $('#sidebar_layout_section select:not(#' + changedID + ')');
+  var otherSelections;
+  if(primIDs.indexOf(changedID) != -1) {
+    otherSelections = [ $('#widget_0_selector'), $('#widget_1_selector'), $('#widget_2_selector')];
+  } else {
+    otherSelections = [$('#widget_3_selector'), $('#widget_4_selector'), $('#widget_5_selector')];
+  }
 
+  
   // when a widget is selected, make sure that no other dropdowns also contain
   // that widget. if one does, set it to "none"
   if(newSelection != 0) {
     for (var i = 0; i < otherSelections.length; i++) {
-      if($(otherSelections[i]).val() == newSelection) {
+      if($(otherSelections[i]).attr('id') != changedID && $(otherSelections[i]).val() == newSelection) {
         $(otherSelections[i]).val(0);
       }
     }
@@ -241,39 +285,64 @@ function sidebarWidgetSelectionChanged() {
 
 function showOnlySelectedWidgetSettings() {
   // show only the settings that pertain to the selected widget set
+  var x = 0;
+  
+  for (var i = 0; i < widgetPagesCount; i++) {
+    var postfix = widgetPostfixes[i];
+    var showSettings = false;
+    var selections = Array();
 
-  var selections = Array();
+    for(var j = 0; j < 3; j++) {
+      var val = $('#widget_' + x + '_selector').val();
+      selections.push(val);
+      x++;
+    }  
 
-  $('#sidebar_layout_section select').each(function() {
-    selections.push($(this).val());
-  });
+    // battery widget
+    if(selections.indexOf('2') != -1) {
+      $('#widget_battery_settings'+postfix).show();
+      showSettings = true;
+    } else {
+      $('#widget_battery_settings'+postfix).hide();
+    }
 
-  // if the battery widget is there, show its settings
-  if(selections.indexOf('2') != -1) {
-    $('#widget_battery_settings').show();
-  } else {
-    $('#widget_battery_settings').hide();
+    // if any of the weather widgets are there, show the weather-related settings
+    if(selections.indexOf('7') != -1 || selections.indexOf('8') != -1) {
+      $('#widget_weather_settings'+postfix).show();
+      showSettings = true;
+    } else {
+      $('#widget_weather_settings'+postfix).hide();
+    }
+
+    // alt tz widget
+    if(selections.indexOf('3') != -1) {
+      $('#widget_altclock_settings'+postfix).show();
+      showSettings = true;
+    } else {
+      $('#widget_altclock_settings'+postfix).hide();
+    }
+
+    // health widget
+    if(selections.indexOf('10') != -1) {
+      $('#widget_health_settings'+postfix).show();
+      showSettings = true;
+    } else {
+      $('#widget_health_settings'+postfix).hide();
+    }
+
+    if (showSettings) {
+      $('#widget_settings'+postfix).show();
+    } else {
+      $('#widget_settings'+postfix).hide();
+    }
+
   }
-
-  // if any of the weather widgets are there, show the weather-related settings
-  if(selections.indexOf('7') != -1 || selections.indexOf('8') != -1) {
-    $('#widget_weather_settings').show();
-  } else {
-    $('#widget_weather_settings').hide();
-  }
-
-  // alt tz widget
-  if(selections.indexOf('3') != -1) {
-    $('#widget_altclock_settings').show();
-  } else {
-    $('#widget_altclock_settings').hide();
-  }
+  
 }
 
-
-function widgetsShouldBeCompact() {
+function widgetsShouldBeCompact(postfix) {
   var useLargeFonts = ($('#use_large_sidebar_font_setting .btn.active').data('setting') == 'yes') ? true : false;
-  var showBatteryPct = ($('#battery_meter_setting .btn.active').data('setting') == 'icon-and-percent') ? true : false;
+  var showBatteryPct = ($('#battery_meter_setting' + postfix + ' .btn.active').data('setting') == 'icon-and-percent') ? true : false;
 
   var totalHeight = 0;
 
@@ -288,7 +357,9 @@ function widgetsShouldBeCompact() {
       '5' : 14,
       '6' : 29,
       '7' : 44,
-      '8' : 63
+      '8' : 63,
+      '9' : 31,
+      '10' : 32
     }
   } else {
     widgetHeights = {
@@ -299,12 +370,18 @@ function widgetsShouldBeCompact() {
       '5' : 14,
       '6' : 26,
       '7' : 42,
-      '8' : 60
+      '8' : 60,
+      '9' : 31,
+      '10' : 32
     }
   }
 
+  var offset = 0;
+  if (postfix != '') {
+    offset = 3;
+  }
   for(var i = 0; i < 3; i++) {
-    var widget_id = $('#widget_' + i + '_selector').val();
+    var widget_id = $('#widget_' + offset + '_selector').val();
     totalHeight += widgetHeights[widget_id];
   }
 
@@ -314,61 +391,68 @@ function widgetsShouldBeCompact() {
 function updateSidebarPreview() {
 
   var useLargeFonts = ($('#use_large_sidebar_font_setting .btn.active').data('setting') == 'yes') ? true : false;
+  var x = 0;
 
-  for(var i = 0; i < 3; i++) {
-    var widget_id = $('#widget_' + i + '_selector').val();
+  for(var i = 0; i < widgetPagesCount; i++) {
+    var postfix = widgetPostfixes[i];
 
-    var image_url = 'images/sidebar_widgets/';
+    for(var j = 0; j < 3; j++) {
+      var widget_id = $('#widget_' + x + '_selector').val();
 
-    if(useLargeFonts) {
-      image_url += 'large_font/';
+      var image_url = 'images/sidebar_widgets/';
+
+      if(useLargeFonts) {
+        image_url += 'large_font/';
+      }
+
+      image_url += widget_id + '-';
+
+      // set the first image
+      switch(widget_id) {
+        case '2':
+          image_url += 'BATTERY';
+          if($('#widget_battery_settings' + postfix + ' .battery_meter_setting .btn.active').data('setting') == 'icon-and-percent') {
+            image_url += '_WITH_PCT';
+          }
+          break;
+        case '3':
+          image_url += 'ALT_TZ';
+          break;
+        case '4':
+          image_url += 'DATE';
+          if(widgetsShouldBeCompact(postfix)) {
+            image_url += '_COMPACT';
+          }
+          break;
+        case '5':
+          image_url += 'SECONDS';
+          break;
+        case '6':
+          image_url += 'WEEK_NUMBER';
+          break;
+        case '7':
+          image_url += 'WEATHER_CURRENT';
+          break;
+        case '8':
+          image_url += 'WEATHER_TODAY';
+          break;
+        case '9':
+          image_url += 'TIME';
+          break;
+        case '10':
+          image_url += 'HEALTH';
+          break;
+        case '0':
+          image_url += 'NONE';
+          break;
+      }
+
+      image_url += '.png';
+
+      $('#widget_' + x + '_preview img').attr("src", image_url);
+      x++;
     }
-
-    image_url += widget_id + '-';
-
-    // set the first image
-    switch(widget_id) {
-      case '2':
-        image_url += 'BATTERY';
-console.log($('#battery_meter_setting .btn.active').data('setting'));
-        if($('#battery_meter_setting .btn.active').data('setting') == 'icon-and-percent') {
-          image_url += '_WITH_PCT';
-        }
-        break;
-      case '3':
-        image_url += 'ALT_TZ';
-        break;
-      case '4':
-        image_url += 'DATE';
-        if(widgetsShouldBeCompact()) {
-          image_url += '_COMPACT';
-        }
-        break;
-      case '5':
-        image_url += 'SECONDS';
-        break;
-      case '6':
-        image_url += 'WEEK_NUMBER';
-        break;
-      case '7':
-        image_url += 'WEATHER_CURRENT';
-        break;
-      case '8':
-        image_url += 'WEATHER_TODAY';
-        break;
-      case '9':
-        image_url += 'TIME';
-        break;
-      case '0':
-        image_url += 'NONE';
-        break;
-    }
-
-    image_url += '.png';
-
-    $('#widget_' + i + '_preview img').attr("src", image_url);
   }
-
 }
 
 $('#sidebar_layout_section select').on('change', sidebarWidgetSelectionChanged);
@@ -521,12 +605,20 @@ function sendSettingsToWatch() {
   }
 
   // battery widget settings
-  if($('#only_show_battery_when_low_setting .btn.active')) {
-    config.only_show_battery_when_low_setting = $('#only_show_battery_when_low_setting .btn.active').data('setting');
-  }
-
   if($('#battery_meter_setting .btn.active')) {
     config.battery_meter_setting = $('#battery_meter_setting .btn.active').data('setting');
+  }
+
+  if($('#decimal_separator .btn.active')) {
+    config.decimal_separator = $('#decimal_separator .btn.active').data('setting');
+  }
+
+  if($('#health_use_distance .btn.active')) {
+    config.health_use_distance = $('#health_use_distance .btn.active').data('setting');
+  }
+
+  if($('#health_use_restful_sleep .btn.active')) {
+    config.health_use_restful_sleep = $('#health_use_restful_sleep .btn.active').data('setting');
   }
 
   // alt clock widgets
@@ -540,7 +632,7 @@ function sendSettingsToWatch() {
   window.localStorage.setItem('savedSettings', JSON.stringify(config));
 
   // Send the config data to the tracking service for SCIENCE
-  trackSettings(config);
+  //trackSettings(config);
 
   // Set the return URL depending on the runtime environment
   var return_to = getQueryParam('return_to', 'pebblejs://close#');
@@ -561,7 +653,9 @@ function trackSettings(config) {
     '5': 'Seconds',
     '6': 'WeekNum',
     '7': 'WeatherCurrent',
-    '8': 'WeatherToday'
+    '8': 'WeatherToday',
+    '9': 'CurrentTime',
+    '10': 'Health'
   };
 
   // track the sidebar layout selections
