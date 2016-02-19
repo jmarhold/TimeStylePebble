@@ -144,7 +144,7 @@ function loadPreviousSettings() {
   loadSettingCheckbox('units_setting', savedSettings.units);
   loadSettingCheckbox('bluetooth_vibe_setting', savedSettings.bluetooth_vibe_setting);
   loadSettingCheckbox('hourly_vibe_setting', savedSettings.hourly_vibe_setting);
-  loadSettingCheckbox('battery_meter_setting', savedSettings._def);
+  loadSettingCheckbox('battery_meter_setting_def', savedSettings.battery_meter_setting_def);
   loadSettingCheckbox('widget_battery_settings .battery_meter_setting', savedSettings.battery_meter_setting);
   loadSettingCheckbox('widget_battery_settings_sec .battery_meter_setting', savedSettings.battery_meter_setting_sec);
   loadSettingCheckbox('time_leading_zero_setting', savedSettings.leading_zero_setting);
