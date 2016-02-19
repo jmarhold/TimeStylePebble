@@ -88,18 +88,35 @@ function loadPreviousSettings() {
       units: 'f',
       weather_loc: '',
       weather_setting: 'auto',
+      // secondary widget settings
+      units_sec: 'f',
+      weather_loc_sec: '',
+      weather_setting_sec: 'auto',
 
+      // battery widget settings - low or charging
+      battery_meter_setting_def: 'icon-only',
       // battery widget settings
-      battery_meter_setting: 'icon-only',
+      battery_meter_setting: 'icon-and-percent',
+      // secondary battery widget settings
+      battery_meter_setting_sec: 'icon-only',
 
       // alt timezone widget settings
       altclock_name: 'ALT',
       altclock_offset: 0,
 
+      // secondary alt timezone widget settings
+      altclock_name_sec: 'ALT',
+      altclock_offset_sec: 0,
+
       // health widget settings
       health_use_distance: 'no',
       health_use_restful_sleep: 'no',
       decimal_separator: '.',
+
+      // secondary health widget settings
+      health_use_distance_sec: 'no',
+      health_use_restful_sleep_sec: 'no',
+      decimal_separator_sec: '.',
 
       // version key used for migrations
       settings_version: CURRENT_SETTINGS_VERSION
@@ -127,7 +144,9 @@ function loadPreviousSettings() {
   loadSettingCheckbox('units_setting', savedSettings.units);
   loadSettingCheckbox('bluetooth_vibe_setting', savedSettings.bluetooth_vibe_setting);
   loadSettingCheckbox('hourly_vibe_setting', savedSettings.hourly_vibe_setting);
-  loadSettingCheckbox('battery_meter_setting', savedSettings.battery_meter_setting);
+  loadSettingCheckbox('battery_meter_setting', savedSettings._def);
+  loadSettingCheckbox('widget_battery_settings .battery_meter_setting', savedSettings.battery_meter_setting);
+  loadSettingCheckbox('widget_battery_settings_sec .battery_meter_setting', savedSettings.battery_meter_setting_sec);
   loadSettingCheckbox('time_leading_zero_setting', savedSettings.leading_zero_setting);
   loadSettingCheckbox('clock_font_setting', savedSettings.clock_font_setting);
   loadSettingCheckbox('use_large_sidebar_font_setting', savedSettings.use_large_sidebar_font_setting);
