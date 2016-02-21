@@ -622,9 +622,13 @@ function sendSettingsToWatch() {
   }
 
   // sidebar settings
+  config.secondary_widgets: $('#secondary_widgets').prop('checked');
   config.widget_0_id = parseInt($('#widget_0_selector').val(), 10);
   config.widget_1_id = parseInt($('#widget_1_selector').val(), 10);
   config.widget_2_id = parseInt($('#widget_2_selector').val(), 10);
+  config.widget_3_id = parseInt($('#widget_3_selector').val(), 10);
+  config.widget_4_id = parseInt($('#widget_4_selector').val(), 10);
+  config.widget_5_id = parseInt($('#widget_5_selector').val(), 10);
 
   if($('#sidebar_position_setting .btn.active').size() > 0) {
     config.sidebar_position = $('#sidebar_position_setting .btn.active').data('setting');
@@ -651,9 +655,27 @@ function sendSettingsToWatch() {
     }
   }
 
+  if($('#weather_setting_sec .btn.active').size() > 0) {
+    var weather_setting_sec = $('#weather_setting_sec .btn.active').data('setting');
+
+    config.weather_setting_sec = weather_setting_sec;
+
+    if(weather_setting_sec == 'auto') {
+      config.weather_loc_sec = '';
+    } else if(weather_setting_sec == 'manual') {
+      config.weather_loc_sec = $('#weather_loc').val();
+    }
+  }
+
   // battery widget settings
+  config.battery_meter_setting_def = $('#battery_meter_setting_def .btn.active').data('setting');
+
   if($('#battery_meter_setting .btn.active')) {
     config.battery_meter_setting = $('#battery_meter_setting .btn.active').data('setting');
+  }
+
+  if($('#battery_meter_setting_sec .btn.active')) {
+    config.battery_meter_setting_sec = $('#battery_meter_setting_sec .btn.active').data('setting');
   }
 
   if($('#decimal_separator .btn.active')) {
@@ -664,13 +686,24 @@ function sendSettingsToWatch() {
     config.health_use_distance = $('#health_use_distance .btn.active').data('setting');
   }
 
+  if($('#health_use_distance_sec .btn.active')) {
+    config.health_use_distance_sec = $('#health_use_distance_sec .btn.active').data('setting');
+  }
+
   if($('#health_use_restful_sleep .btn.active')) {
     config.health_use_restful_sleep = $('#health_use_restful_sleep .btn.active').data('setting');
+  }
+
+  if($('#health_use_restful_sleep_sec .btn.active')) {
+    config.health_use_restful_sleep_sec = $('#health_use_restful_sleep_sec .btn.active').data('setting');
   }
 
   // alt clock widgets
   config.altclock_name = $('#altclock_name').val();
   config.altclock_offset = $('#altclock_offset_hour option:selected').data('setting');
+
+  config.altclock_name_sec = $('#altclock_name_sec').val();
+  config.altclock_offset_sec = $('#altclock_offset_hour_sec option:selected').data('setting');
 
   // add the version, in case we need to do more migrations
   config.settings_version = CURRENT_SETTINGS_VERSION;
@@ -687,6 +720,7 @@ function sendSettingsToWatch() {
 }
 
 function trackSettings(config) {
+  //TODO implement second widgets page settings
   // track the color theme
   var colorTheme = 'TimeStyleTheme,#' + config.color_time + ',#' + config.color_bg + ',#' + config.color_sidebar + ',#' + config.sidebar_text_color;
   ga('set', 'dimension1', colorTheme);
