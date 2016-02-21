@@ -1,6 +1,6 @@
-<div id="{{widgetId}}">
+<div id="widget_battery_settings{{postfix}}">
   <label>{% if widgetLabel != '' %}{{ widgetLabel }}{% else %}Battery Meter{% endif %}</label>
-  <div class="battery_meter_setting form-group" >
+  <div id="battery_meter_setting{{postfix}}" class="form-group" >
     <label class="subtle">Style</label>
     <div class="btn-group btn-group-justified"  data-toggle="buttons">
       <label class="btn btn-default" data-setting="icon-only" >
@@ -18,5 +18,5 @@
   <hr>
 </div>
 
-{% assign widgetId = '' %}
+{% assign postfix = '' %}
 {% assign widgetLabel = '' %}

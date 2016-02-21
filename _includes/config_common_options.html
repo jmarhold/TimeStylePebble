@@ -1,35 +1,35 @@
-{% assign widgetId = '' %}
+{% assign postfix = '' %}
 {% assign widgetLabel = '' %}
 
 <hr>
 
 <div id="widget_settings">
   <label>Widget settings</label>
-  {% assign widgetId = 'widget_health_settings' %}
+  {% assign postfix = '' %}
   {% include widget_health.html %}
 
-  {% assign widgetId = 'widget_battery_settings' %}
+  {% assign postfix = '' %}
   {% include widget_battery.html %}
 
-  {% assign widgetId = 'widget_weather_settings' %}
+  {% assign postfix = '' %}
   {% include widget_weather.html %}
 
-  {% assign widgetId = 'widget_altclock_settings' %}
+  {% assign postfix = '' %}
   {% include widget_altclock.html %}
 </div>
 
 <div id="widget_settings_sec">
   <label>Secondary Widget settings</label>
-  {% assign widgetId = 'widget_health_settings_sec' %}
+  {% assign postfix = '_sec' %}
   {% include widget_health.html %}
 
-  {% assign widgetId = 'widget_battery_settings_sec' %}
+  {% assign postfix = '_sec' %}
   {% include widget_battery.html %}
 
-  {% assign widgetId = 'widget_weather_settings_sec' %}
+  {% assign postfix = '_sec' %}
   {% include widget_weather.html %}
 
-  {% assign widgetId = 'widget_altclock_settings_sec' %}
+  {% assign postfix = '_sec' %}
   {% include widget_altclock.html %}
   <hr>
 </div>

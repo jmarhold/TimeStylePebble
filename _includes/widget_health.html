@@ -1,11 +1,11 @@
-<div id="{{widgetId}}">
+<div id="widget_health_settings{{postfix}}">
   <label>{% if widgetLabel != '' %}{{ widgetLabel }}{% else %}Health (Steps &amp; Sleep){% endif %}</label><br>
-  <div class="alert alert-info" role="alert" id="autohealth_info">
+  <div class="alert alert-info" role="alert">
     The health widget automatically switches to sleep mode based on
     whether or not you are asleep.
   </div>
   <label class="subtle">Activity</label>
-  <div id="health_use_distance" class="form-group" >
+  <div id="health_use_distance{{postfix}}" class="form-group" >
     <div class="btn-group btn-group-justified"  data-toggle="buttons">
       <label class="btn btn-default" data-setting="no" >
         <input type="radio" name="options" autocomplete="off">Steps
@@ -16,7 +16,7 @@
     </div>
   </div>
   <label class="subtle">Sleep</label>
-  <div id="health_use_restful_sleep" class="form-group" >
+  <div id="health_use_restful_sleep{{postfix}}" class="form-group" >
     <div class="btn-group btn-group-justified"  data-toggle="buttons">
       <label class="btn btn-default" data-setting="no" >
         <input type="radio" name="options" autocomplete="off">Total Sleep
@@ -28,5 +28,5 @@
   </div>
   <hr>
 </div>
-{% assign widgetId = '' %}
+{% assign postfix = '' %}
 {% assign widgetLabel = '' %}

@@ -20,8 +20,6 @@ function loadSettingCheckbox(elementID, setting) {
   if(setting) {
     $('#' + elementID + ' label[data-setting="' + setting + '"] input').attr('checked', true);
     $('#' + elementID + ' label[data-setting="' + setting + '"]').addClass('active');
-    $('.' + elementID + ' label[data-setting="' + setting + '"] input').attr('checked', true);
-    $('.' + elementID + ' label[data-setting="' + setting + '"]').addClass('active');
   }
 }
 
@@ -38,10 +36,23 @@ function checkVersion() {
 function migrateLegacySettings(config) {
 
   // stick in the new defaults
+  config.secondary_widgets = 'no';
+  config.widget_3_id = '0'; // empty
+  config.widget_4_id = '0'; // empty
+  config.widget_5_id = '0'; // empty
+  config.weather_loc_sec = '';
+  config.weather_setting_sec = 'auto';
+  config.battery_meter_setting_def = 'icon-only';
+  config.health_use_distance_sec = 'no';
+  config.health_use_restful_sleep_sec = 'no';
+  config.battery_meter_setting_sec = 'icon-only';
+  config.altclock_name_sec = 'ALT';
+  config.altclock_offset_sec = '0';
+  config.decimal_separator = '.';
   config.health_use_distance = 'no';
   config.health_use_restful_sleep = 'no';
-  config.decimal_separator = '.';
-  config.secondary_widgets = 'no';
+  config.health_use_distance_sec = 'no';
+  config.health_use_restful_sleep_sec = 'no';
 
   return config;
 }
@@ -85,11 +96,11 @@ function loadPreviousSettings() {
       use_large_sidebar_font_setting: 'no',
 
       // weather widget settings
+      // unit setting is common for both widgets
       units: 'f',
       weather_loc: '',
-      weather_setting: 'auto',
+      weather_setting: 'manual',
       // secondary widget settings
-      units_sec: 'f',
       weather_loc_sec: '',
       weather_setting_sec: 'auto',
 
@@ -102,21 +113,22 @@ function loadPreviousSettings() {
 
       // alt timezone widget settings
       altclock_name: 'ALT',
-      altclock_offset: 0,
+      altclock_offset: '0',
 
       // secondary alt timezone widget settings
       altclock_name_sec: 'ALT',
-      altclock_offset_sec: 0,
+      altclock_offset_sec: '0',
 
       // health widget settings
+      // decimal separator setting is common for both widgets
+      decimal_separator: '.',
       health_use_distance: 'no',
       health_use_restful_sleep: 'no',
-      decimal_separator: '.',
-
+      
       // secondary health widget settings
       health_use_distance_sec: 'no',
       health_use_restful_sleep_sec: 'no',
-      decimal_separator_sec: '.',
+      
 
       // version key used for migrations
       settings_version: CURRENT_SETTINGS_VERSION
@@ -145,22 +157,36 @@ function loadPreviousSettings() {
   loadSettingCheckbox('bluetooth_vibe_setting', savedSettings.bluetooth_vibe_setting);
   loadSettingCheckbox('hourly_vibe_setting', savedSettings.hourly_vibe_setting);
   loadSettingCheckbox('battery_meter_setting_def', savedSettings.battery_meter_setting_def);
-  loadSettingCheckbox('widget_battery_settings .battery_meter_setting', savedSettings.battery_meter_setting);
-  loadSettingCheckbox('widget_battery_settings_sec .battery_meter_setting', savedSettings.battery_meter_setting_sec);
+  
   loadSettingCheckbox('time_leading_zero_setting', savedSettings.leading_zero_setting);
   loadSettingCheckbox('clock_font_setting', savedSettings.clock_font_setting);
   loadSettingCheckbox('use_large_sidebar_font_setting', savedSettings.use_large_sidebar_font_setting);
-  loadSettingCheckbox('weather_setting', savedSettings.weather_setting);
+  
   loadSettingCheckbox('decimal_separator', savedSettings.decimal_separator);
   loadSettingCheckbox('health_use_distance', savedSettings.health_use_distance);
   loadSettingCheckbox('health_use_restful_sleep', savedSettings.health_use_restful_sleep);
 
+  loadSettingCheckbox('battery_meter_setting', savedSettings.battery_meter_setting);
+  loadSettingCheckbox('battery_meter_setting_sec', savedSettings.battery_meter_setting_sec);
+  loadSettingCheckbox('weather_setting', savedSettings.weather_setting);
+  loadSettingCheckbox('weather_setting_sec', savedSettings.weather_setting_sec);
+
   // load weather location
   $('#weather_loc').val(savedSettings.weather_loc);
+  $('#weather_loc_sec').val(savedSettings.weather_loc_sec);
 
   if(savedSettings.weather_setting == 'manual') {
     $('#manual_weather_loc_setting_area').collapse('show');
   }
+  if(savedSettings.weather_setting_sec == 'manual') {
+    $('#manual_weather_loc_setting_area_sec').collapse('show');
+  }
+
+  // load alt timezone widget settings
+  $('#altclock_name').val(savedSettings.altclock_name);
+  $('#altclock_offset_hour option[data-setting="' + savedSettings.altclock_offset + '"]').prop('selected', true);
+  $('#altclock_name_sec').val(savedSettings.altclock_name_sec);
+  $('#altclock_offset_hour_sec option[data-setting="' + savedSettings.altclock_offset_sec + '"]').prop('selected', true);
 
   // load language selector
   if(savedSettings.language_id !== undefined) {
@@ -183,10 +209,7 @@ function loadPreviousSettings() {
   $('#secondary_widgets').on('change', customSecondaryWidgetsChanged);
 
 
-  // load alt timezone widget settings
-  $('#altclock_name').val(savedSettings.altclock_name);
-  $('#altclock_offset_hour option[data-setting="' + savedSettings.altclock_offset + '"]').prop('selected', true);
-  $('#altclock_offset_hour option[data-setting="' + savedSettings.altclock_offset + '"]').prop('selected', true);
+  
 
   // update the widget settings sections to only show ones that are relevant
   showOnlySelectedWidgetSettings();
@@ -238,10 +261,13 @@ $('#sidebar-text-color').on('change', customColorChanged);
 $('label.btn').on('change', setFormHasChanges);
 $('select').on('change', setFormHasChanges);
 $('#weather_loc').on('input', setFormHasChanges);
+$('#weather_loc_sec').on('input', setFormHasChanges);
 $('#altclock_name').on('input', setFormHasChanges);
+$('#altclock_name_sec').on('input', setFormHasChanges);
 
 $('#use_large_sidebar_font_setting').on('change', updateSidebarPreview);
-$('.battery_meter_setting').on('change', updateSidebarPreview);
+$('#battery_meter_setting').on('change', updateSidebarPreview);
+$('#battery_meter_setting_sec').on('change', updateSidebarPreview);
 
 function customColorChanged() {
   setFormHasChanges();
@@ -430,7 +456,7 @@ function updateSidebarPreview() {
       switch(widget_id) {
         case '2':
           image_url += 'BATTERY';
-          if($('#widget_battery_settings' + postfix + ' .battery_meter_setting .btn.active').data('setting') == 'icon-and-percent') {
+          if($('#battery_meter_setting' + postfix + ' .btn.active').data('setting') == 'icon-and-percent') {
             image_url += '_WITH_PCT';
           }
           break;
@@ -514,9 +540,11 @@ function resetSettings() {
   $(':radio').prop('checked', false);
 
   $('#manual_weather_loc_setting_area').collapse('hide');
+  $('#manual_weather_loc_setting_area_sec').collapse('hide');
 
   $('#language_selection').val('(No change)');
   $('#altclock_offset_hour option[data-setting="0"]').prop('selected', true);
+  $('#altclock_offset_hour_sec option[data-setting="0"]').prop('selected', true);
 
   loadLastUsedColors();
   loadPreviousSettings();
@@ -713,15 +741,22 @@ function cancelAndClose() {
 }
 
 $('#weather_setting input').on('change', function(){
-  $target = $('#manual_weather_loc_setting_area');
+  toggleWeatherLocSettingArea('');
+});
 
-  if ($('#weather_setting_manual').is(':checked')) {
+$('#weather_setting_sec input').on('change', function(){
+  toggleWeatherLocSettingArea('_sec');
+});
+
+function toggleWeatherLocSettingArea(postfix) {
+  $target = $('#manual_weather_loc_setting_area'+postfix);
+
+  if ($('#weather_setting_manual'+postfix).is(':checked')) {
     $target.collapse('show');
   } else {
     $target.collapse('hide');
   }
-});
-
+}
 /* stuff for the preset saving/loading */
 
 

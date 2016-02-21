@@ -1,13 +1,13 @@
-<div id="{{widgetId}}">
+<div id="widget_altclock_settings{{postfix}}">
   <label>{% if widgetLabel != '' %}{{ widgetLabel }}{% else %}Alternate Time Zone{% endif %}</label><br>
   <label class="subtle">Display Name (Max 4 letters)</label>
-  <input type="text" value="ALT" class="form-control" id="altclock_name" maxlength="4" placeholder='e.g. "PDT, CET, or UTC"'>
+  <input type="text" value="ALT" class="form-control" id="altclock_name{{postfix}}" maxlength="4" placeholder='e.g. "PDT, CET, or UTC"'>
   <br>
   <label class="subtle">
     Hour Offset<br>
     <small>Relative to your local time</small>
   </label><br>
-  <select id="altclock_offset_hour" class="form-control">
+  <select id="altclock_offset_hour{{postfix}}" class="form-control">
     <option data-setting="-23">-23</option>
     <option data-setting="-22">-22</option>
     <option data-setting="-21">-21</option>
@@ -31,7 +31,7 @@
     <option data-setting="-3">-3</option>
     <option data-setting="-2">-2</option>
     <option data-setting="-1">-1</option>
-    <option data-setting="0" selected>0</option>
+    <option data-setting="0">0</option>
     <option data-setting="+1">+1</option>
     <option data-setting="+2">+2</option>
     <option data-setting="+3">+3</option>
@@ -58,5 +58,5 @@
   </select>
   <hr>
 </div>
-{% assign widgetId = '' %}
+{% assign postfix = '' %}
 {% assign widgetLabel = '' %}
