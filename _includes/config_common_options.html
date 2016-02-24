@@ -61,28 +61,34 @@
   </div>
 </div>
 <hr>
-<label>Battery Meter - low or charging</label>
-<div class="alert alert-info" role="alert" id="autobattery_info">
-  The battery meter will always be shown when the battery is low or charging.
-</div>
-<div id="battery_meter_setting_def" class="form-group" >
-  <label class="subtle">Style</label>
-  <div class="btn-group btn-group-justified"  data-toggle="buttons">
-    <label class="btn btn-default" data-setting="icon-only" >
-      <input type="radio" name="options" autocomplete="off">
-      <img src="images/battery_meter.png" width="30" height="30" ><br />
-      Icon only
-    </label>
-    <label class="btn btn-default" data-setting="icon-and-percent" >
-      <input type="radio" name="options" autocomplete="off">
-      <img src="images/battery_meter_with_percent.png" width="30" height="30" ><br />
-      Icon &amp; percent
-    </label>
+<div id="widget_battery_settings_def">
+  <label>Battery Meter - low or charging</label>
+  <div id="battery_meter_def" class="btn-group btn-group-justified"  data-toggle="buttons">
+    <label class="btn btn-default" data-setting="on" >
+    <input type="radio" name="options" autocomplete="off">Automatically show battery meter at 20%</label>
+    <label class="btn btn-default" data-setting="off" >
+    <input type="radio" name="options" autocomplete="off">Never show</label>
   </div>
+  
+  <div id="battery_meter_setting_def" class="form-group" >
+    <label class="subtle">Style</label>
+    <div class="btn-group btn-group-justified"  data-toggle="buttons">
+      <label class="btn btn-default" data-setting="icon-only" >
+        <input type="radio" name="options" autocomplete="off">
+        <img src="images/battery_meter.png" width="30" height="30" ><br />
+        Icon only
+      </label>
+      <label class="btn btn-default" data-setting="icon-and-percent" >
+        <input type="radio" name="options" autocomplete="off">
+        <img src="images/battery_meter_with_percent.png" width="30" height="30" ><br />
+        Icon &amp; percent
+      </label>
+    </div>
+  </div>
+  <hr>
 </div>
 
 
-<hr>
 <label>Regional Options</label><br />
 <label class="subtle">Language</label><br />
 <div class="form-group" >

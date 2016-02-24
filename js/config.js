@@ -42,6 +42,7 @@ function migrateLegacySettings(config) {
   config.widget_5_id = '0'; // empty
   config.weather_loc_sec = '';
   config.weather_setting_sec = 'auto';
+  config.battery_meter_def = 'on';
   config.battery_meter_setting_def = 'icon-only';
   config.health_use_distance_sec = 'no';
   config.health_use_restful_sleep_sec = 'no';
@@ -105,6 +106,7 @@ function loadPreviousSettings() {
       weather_setting_sec: 'auto',
 
       // battery widget settings - low or charging
+      battery_meter_def: 'on',
       battery_meter_setting_def: 'icon-only',
       // battery widget settings
       battery_meter_setting: 'icon-and-percent',
@@ -156,6 +158,7 @@ function loadPreviousSettings() {
   loadSettingCheckbox('units_setting', savedSettings.units);
   loadSettingCheckbox('bluetooth_vibe_setting', savedSettings.bluetooth_vibe_setting);
   loadSettingCheckbox('hourly_vibe_setting', savedSettings.hourly_vibe_setting);
+  loadSettingCheckbox('battery_meter_def', savedSettings.battery_meter_def);
   loadSettingCheckbox('battery_meter_setting_def', savedSettings.battery_meter_setting_def);
   
   loadSettingCheckbox('time_leading_zero_setting', savedSettings.leading_zero_setting);
@@ -264,6 +267,8 @@ $('#weather_loc').on('input', setFormHasChanges);
 $('#weather_loc_sec').on('input', setFormHasChanges);
 $('#altclock_name').on('input', setFormHasChanges);
 $('#altclock_name_sec').on('input', setFormHasChanges);
+$('#battery_meter_def').on('change', setFormHasChanges);
+$('#babattery_meter_setting_def').on('change', setFormHasChanges);
 
 $('#use_large_sidebar_font_setting').on('change', updateSidebarPreview);
 $('#battery_meter_setting').on('change', updateSidebarPreview);
@@ -314,7 +319,7 @@ function sidebarWidgetSelectionChanged() {
   }
 
   
-  // when a widget is selected, make sure that no other dropdowns also contain
+  // when a widget is selected, make sure that no other dropdowns in same widget page(prim, sec) also contain
   // that widget. if one does, set it to "none"
   if(newSelection != 0) {
     for (var i = 0; i < otherSelections.length; i++) {
@@ -331,12 +336,12 @@ function sidebarWidgetSelectionChanged() {
 function showOnlySelectedWidgetSettings() {
   // show only the settings that pertain to the selected widget set
   var x = 0;
-  
+  var stdBatWidgetUsed = true; // if no batt widget is shown then this one is
   for (var i = 0; i < widgetPagesCount; i++) {
     var postfix = widgetPostfixes[i];
-    var showSettings = false;
+    var showSettings = false; // whole div with label Widget Settings (if at least one customizable widget is shown)
     var selections = Array();
-
+    
     for(var j = 0; j < 3; j++) {
       var val = $('#widget_' + x + '_selector').val();
       selections.push(val);
@@ -347,6 +352,7 @@ function showOnlySelectedWidgetSettings() {
     if(selections.indexOf('2') != -1) {
       $('#widget_battery_settings'+postfix).show();
       showSettings = true;
+      stdBatWidgetUsed = false;
     } else {
       $('#widget_battery_settings'+postfix).hide();
     }
@@ -382,7 +388,12 @@ function showOnlySelectedWidgetSettings() {
     }
 
   }
-  
+  //finally show/hide battery settings - low or charging - if no battery widget is set then show this one
+  if (stdBatWidgetUsed) {
+    $('#widget_battery_settings_def').show();
+  } else {
+    $('#widget_battery_settings_def').hide();
+  }
 }
 
 function widgetsShouldBeCompact(postfix) {
@@ -486,6 +497,9 @@ function updateSidebarPreview() {
           break;
         case '10':
           image_url += 'HEALTH';
+          break;
+		    case '11':
+		      image_url += 'BEATS';
           break;
         case '0':
           image_url += 'NONE';
@@ -622,7 +636,7 @@ function sendSettingsToWatch() {
   }
 
   // sidebar settings
-  config.secondary_widgets: $('#secondary_widgets').prop('checked');
+  config.secondary_widgets = $('#secondary_widgets').prop('checked');
   config.widget_0_id = parseInt($('#widget_0_selector').val(), 10);
   config.widget_1_id = parseInt($('#widget_1_selector').val(), 10);
   config.widget_2_id = parseInt($('#widget_2_selector').val(), 10);
@@ -668,7 +682,13 @@ function sendSettingsToWatch() {
   }
 
   // battery widget settings
-  config.battery_meter_setting_def = $('#battery_meter_setting_def .btn.active').data('setting');
+  if($('#battery_meter_def .btn.active')) {
+    config.battery_meter_def = $('#battery_meter_def .btn.active').data('setting');
+  }
+
+  if($('#battery_meter_setting_def .btn.active')) {
+    config.battery_meter_setting_def = $('#battery_meter_setting_def .btn.active').data('setting');
+  }
 
   if($('#battery_meter_setting .btn.active')) {
     config.battery_meter_setting = $('#battery_meter_setting .btn.active').data('setting');
