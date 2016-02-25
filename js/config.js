@@ -415,7 +415,8 @@ function widgetsShouldBeCompact(postfix) {
       '7' : 44,
       '8' : 63,
       '9' : 31,
-      '10' : 32
+      '10' : 32,
+      '12' : 29
     }
   } else {
     widgetHeights = {
@@ -428,7 +429,8 @@ function widgetsShouldBeCompact(postfix) {
       '7' : 42,
       '8' : 60,
       '9' : 31,
-      '10' : 32
+      '10' : 32,
+      '12' : 26,
     }
   }
 
@@ -501,6 +503,9 @@ function updateSidebarPreview() {
 		    case '11':
 		      image_url += 'BEATS';
           break;
+        case '12':
+          image_url += 'DAY_NUMBER';
+          break;  
         case '0':
           image_url += 'NONE';
           break;
