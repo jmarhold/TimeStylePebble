@@ -100,3 +100,35 @@ const char wordForWeek[29][12] = {
 	"Ned",
 	"N"
 };
+
+const char wordForDay[29][12] = {
+	"Day",
+	"Sem",
+	"W",
+	"Sem",
+	"Sett",
+	"Wk",
+	"Hf",
+	"Den",
+	"Sem",
+	"εβδ",
+	"V",
+	"Tydz",
+	"Deň",
+	"Tuần",
+	"Săpt",
+	"Setm",
+	"Uke",
+	"нед",
+	"Näd",
+	"Ast",
+	"Vk",
+	"Uge",
+	"Sav",
+	"Ted",
+	"Hét",
+	"Tj",
+	"Scht",
+	"Ned",
+	"N"
+};
