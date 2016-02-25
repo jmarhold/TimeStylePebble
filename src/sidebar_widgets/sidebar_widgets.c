@@ -31,6 +31,7 @@ char currentSecondsNum[8];
 char altClock[8];
 char currentHours[8];
 char currentMinutes[8];
+char currentDayOfYearNum[8];
 
 // the widgets
 SidebarWidget batteryMeterWidget;
@@ -72,6 +73,10 @@ void AltTime_draw(GContext* ctx, int yPosition);
 SidebarWidget timeWidget;
 int Time_getHeight();
 void Time_draw(GContext* ctx, int yPosition);
+
+SidebarWidget dayNumberWidget;
+int DayNumber_getHeight();
+void DayNumber_draw(GContext* ctx, int yPosition);
 
 #ifdef PBL_HEALTH
   GDrawCommandImage* sleepImage;
@@ -132,6 +137,9 @@ void SidebarWidgets_init() {
   timeWidget.getHeight = Time_getHeight;
   timeWidget.draw      = Time_draw;
 
+  dayNumberWidget.getHeight = DayNumber_getHeight;
+  dayNumberWidget.draw      = DayNumber_draw;
+
   #ifdef PBL_HEALTH
     healthWidget.getHeight = Health_getHeight;
     healthWidget.draw = Health_draw;
@@ -173,6 +181,10 @@ void SidebarWidgets_updateTime(struct tm* timeInfo) {
   strftime(currentDayNum,  3, "%e", timeInfo);
   strftime(currentWeekNum, 3, "%V", timeInfo);
 
+  strftime(currentDayOfYearNum, 8, "%j", timeInfo);
+  int today = atoi(currentDayOfYearNum);
+  snprintf(currentDayOfYearNum, sizeof(currentDayOfYearNum), "%d", today);
+    
   // set the seconds string
   strftime(currentSecondsNum, 4, ":%S", timeInfo);
 
@@ -249,10 +261,15 @@ SidebarWidget getSidebarWidgetByType(SidebarWidgetType type) {
       break;
     case WEEK_NUMBER:
       return weekNumberWidget;
+      break;
     #ifdef PBL_HEALTH
       case HEALTH:
         return healthWidget;
+        break;
     #endif
+    case DAY_NUMBER:
+      return dayNumberWidget;
+      break;
     default:
       return emptyWidget;
       break;
@@ -849,3 +866,32 @@ void Steps_draw(GContext* ctx, int yPosition) {
 }
 
 #endif
+
+/***** Day Number Widget *****/
+
+int DayNumber_getHeight() {
+  return (globalSettings.useLargeFonts) ? 29 : 26;
+}
+
+void DayNumber_draw(GContext* ctx, int yPosition) {
+  graphics_context_set_text_color(ctx, globalSettings.sidebarTextColor);
+
+  // note that it draws "above" the y position to correct for
+  // the vertical padding
+  graphics_draw_text(ctx,
+                     wordForDay[globalSettings.languageId],
+                     smSidebarFont,
+                     GRect(-4 + SidebarWidgets_xOffset, yPosition - 4, 38, 20),
+                     GTextOverflowModeFill,
+                     GTextAlignmentCenter,
+                     NULL);
+  int yOffset = 0;
+  yOffset = globalSettings.useLargeFonts ? 9 : 6;
+  graphics_draw_text(ctx,
+                       currentDayOfYearNum,
+                       mdSidebarFont,
+                       GRect(0 + SidebarWidgets_xOffset, yPosition + yOffset, 30, 20),
+                       GTextOverflowModeFill,
+                       GTextAlignmentCenter,
+                       NULL);
+}

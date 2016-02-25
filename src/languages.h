@@ -39,3 +39,5 @@ extern const char monthNames[29][12][8];
 // all of these are taken from:
 // http://www.unicode.org/cldr/charts/28/by_type/date_&_time.fields.html#521165cf49647551
 extern const char wordForWeek[29][12];
+
+extern const char wordForDay[29][12];
