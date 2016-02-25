@@ -442,6 +442,9 @@ function updateSidebarPreview() {
         case '10':
           image_url += 'HEALTH';
           break;
+        case '12':
+          image_url += 'DAY_NUMBER';
+          break;    
         case '0':
           image_url += 'NONE';
           break;
